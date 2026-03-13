@@ -15,7 +15,6 @@ async def start(update, context):
     user = update.effective_user
     user_id = user.id
 
-    # если пользователь новый — отправляем уведомление
     if user_id not in users:
 
         username = f"@{user.username}" if user.username else "нет username"
