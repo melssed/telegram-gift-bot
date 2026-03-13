@@ -1,7 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 from gift_sender import send_gift
-print("NEW VERSION")
+
 TOKEN = "8332166589:AAH_jwVBhFdQ3O9L4ip7GNlx_0vRbQHv6zs"
 ALLOWED_USER = 7708695143
 ADMIN_ID = 651824873
@@ -177,3 +177,4 @@ app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message))
 
 
 app.run_polling(drop_pending_updates=True)
+
