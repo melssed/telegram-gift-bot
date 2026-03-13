@@ -29,16 +29,13 @@ async def start(update, context):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(
-        text,
-        parse_mode="HTML",
-        reply_markup=reply_markup,
-        disable_web_page_preview=True
-    )
-
+    text,
+    parse_mode="HTML",
+    reply_markup=reply_markup
+)
 
 async def check_user(update):
     if update.effective_user.id != ALLOWED_USER:
-        await update.message.reply_text("⛔")
         return False
     return True
 
@@ -145,4 +142,5 @@ app.add_handler(CommandHandler("cancel", cancel))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message))
 
 app.run_polling(drop_pending_updates=True)
+
 
