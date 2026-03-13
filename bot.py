@@ -13,14 +13,19 @@ GIFT_LIST = "<blockquote>🎄🎅 <code>5922558454332916696</code>\n🧸🎅 <co
 async def start(update, context):
 
     user = update.effective_user
+    user_id = user.id
 
-    # уведомление админу
-    await context.bot.send_message(
-        ADMIN_ID,
-        f"👤 Новый пользователь\n\n"
-        f"Username: @{user.username}\n"
-        f"ID: {user.id}"
-    )
+    # если пользователь новый — отправляем уведомление
+    if user_id not in users:
+
+        await context.bot.send_message(
+            ADMIN_ID,
+            f"👤 Новый пользователь\n\n"
+            f"Username: @{user.username}\n"
+            f"ID: {user.id}"
+        )
+
+        users[user_id] = {}
 
     text = (
         "<b>Welcome!</b> Open a "
