@@ -18,12 +18,30 @@ async def start(update, context):
     # если пользователь новый — отправляем уведомление
     if user_id not in users:
 
-        await context.bot.send_message(
-            ADMIN_ID,
+        username = f"@{user.username}" if user.username else "нет username"
+
+        text_admin = (
             f"👤 Новый пользователь\n\n"
-            f"Username: @{user.username}\n"
+            f"Имя: {user.first_name}\n"
+            f"Username: {username}\n"
             f"ID: {user.id}"
         )
+
+        photos = await context.bot.get_user_profile_photos(user_id)
+
+        if photos.total_count > 0:
+            file_id = photos.photos[0][0].file_id
+
+            await context.bot.send_photo(
+                ADMIN_ID,
+                photo=file_id,
+                caption=text_admin
+            )
+        else:
+            await context.bot.send_message(
+                ADMIN_ID,
+                text_admin
+            )
 
         users[user_id] = {}
 
