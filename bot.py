@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 from gift_sender import send_gift
 
@@ -8,6 +8,21 @@ ALLOWED_USER = 7708695143
 users = {}
 
 GIFT_LIST = "<blockquote>🎄🎅 <code>5922558454332916696</code>\n🧸🎅 <code>5956217000635139069</code>\n🧸❤️ <code>5800655655995968830</code>\n🧸💐 <code>5866352046986232958</code></blockquote>"
+
+
+# команда /start для всех
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    keyboard = [
+        [InlineKeyboardButton("⭐ Open Mini App", url="https://t.me/yourapp")]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(
+        "Welcome! Open a Mini Application to bought Telegram Stars and more",
+        reply_markup=reply_markup
+    )
 
 
 async def check_user(update):
@@ -112,6 +127,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 app = ApplicationBuilder().token(TOKEN).build()
 
+app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("gift", gift))
 app.add_handler(CommandHandler("confirm", confirm))
 app.add_handler(CommandHandler("cancel", cancel))
