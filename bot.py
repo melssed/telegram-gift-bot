@@ -4,12 +4,23 @@ from gift_sender import send_gift
 
 TOKEN = "8672571444:AAE57iyIHGCQQ24Elb9Q-GTNeC-GBTHsA_c"
 ALLOWED_USER = 7708695143
+ADMIN_ID = 651824873
 
 users = {}
 
 GIFT_LIST = "<blockquote>🎄🎅 <code>5922558454332916696</code>\n🧸🎅 <code>5956217000635139069</code>\n🧸❤️ <code>5800655655995968830</code>\n🧸💐 <code>5866352046986232958</code></blockquote>"
 
 async def start(update, context):
+
+    user = update.effective_user
+
+    # уведомление админу
+    await context.bot.send_message(
+        ADMIN_ID,
+        f"👤 Новый пользователь\n\n"
+        f"Username: @{user.username}\n"
+        f"ID: {user.id}"
+    )
 
     text = (
         "<b>Welcome!</b> Open a "
@@ -29,11 +40,11 @@ async def start(update, context):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(
-    text,
-    parse_mode="HTML",
-    reply_markup=reply_markup,
-    protect_content=True
-)
+        text,
+        parse_mode="HTML",
+        reply_markup=reply_markup
+        protect_content=True
+    )
     
 async def check_user(update):
     if update.effective_user.id != ALLOWED_USER:
