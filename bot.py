@@ -42,7 +42,7 @@ async def start(update, context):
     await update.message.reply_text(
         text,
         parse_mode="HTML",
-        reply_markup=reply_markup
+        reply_markup=reply_markup,
         protect_content=True
     )
     
@@ -154,6 +154,3 @@ app.add_handler(CommandHandler("cancel", cancel))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message))
 
 app.run_polling(drop_pending_updates=True)
-
-
-
