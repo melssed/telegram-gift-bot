@@ -9,19 +9,30 @@ users = {}
 
 GIFT_LIST = "<blockquote>🎄🎅 <code>5922558454332916696</code>\n🧸🎅 <code>5956217000635139069</code>\n🧸❤️ <code>5800655655995968830</code>\n🧸💐 <code>5866352046986232958</code></blockquote>"
 
+async def start(update, context):
 
-# команда /start для всех
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = (
+        "<b>Welcome!</b> Open a "
+        "<b><a href='https://t.me/PlacedMarketBot'>Mini Application</a></b> "
+        "to bought <b>Telegram Stars</b> and more"
+    )
 
     keyboard = [
-        [InlineKeyboardButton("⭐ Open Mini App", url="https://t.me/yourapp")]
+        [
+            InlineKeyboardButton(
+                "Open the Placed Market Application",
+                url="http://t.me/PlacedMarketBot?startapp"
+            )
+        ]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(
-        "Welcome! Open a Mini Application to bought Telegram Stars and more",
-        reply_markup=reply_markup
+        text,
+        parse_mode="HTML",
+        reply_markup=reply_markup,
+        disable_web_page_preview=True
     )
 
 
@@ -134,3 +145,4 @@ app.add_handler(CommandHandler("cancel", cancel))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message))
 
 app.run_polling(drop_pending_updates=True)
+
