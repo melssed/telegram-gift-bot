@@ -2,7 +2,9 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 from gift_sender import send_gift
 
-TOKEN = "НОВЫЙ_ТОКЕН"
+import os
+
+TOKEN = os.getenv("TOKEN")
 ALLOWED_USER = 7708695143
 ADMIN_ID = 651824873
 
