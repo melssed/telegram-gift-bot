@@ -1,3 +1,4 @@
+print("BOT STARTED")
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 from gift_sender import send_gift
