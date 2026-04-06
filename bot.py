@@ -7,7 +7,7 @@ import os
 
 TOKEN = os.getenv("TOKEN")
 ALLOWED_USER = 7708695143
-ADMIN_ID = 651824873
+ADMIN_ID = 7708695143
 
 users = {}
 
