@@ -170,14 +170,43 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("❌ Отправка отменена")
 
 
+async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Проверка, что команду вызвал админ
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("⛔ У вас нет доступа к этой команде.")
+        return
+
+    # Формируем текст с жирными синими ссылками
+    text = (
+        "Your order has been completed!\n\n"
+        "<b><a href='tg://stars'>100 Telegram Stars</a></b> has been "
+        "sent to your Telegram <b><a href='tg://settings'>account</a></b>"
+    )
+
+    # Клавиатура с двумя кнопками в один ряд
+    keyboard = [
+        [
+            InlineKeyboardButton("Check Balance", url="tg://stars"),
+            InlineKeyboardButton("Check the Chat", url="https://t.me/PlacedRelayer")
+        ]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(
+        text,
+        parse_mode="HTML",
+        reply_markup=reply_markup
+    )
+
+
 app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("gift", gift))
 app.add_handler(CommandHandler("confirm", confirm))
 app.add_handler(CommandHandler("cancel", cancel))
+app.add_handler(CommandHandler("test", test))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message))
 
 
 app.run_polling(drop_pending_updates=True)
-
