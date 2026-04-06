@@ -7,7 +7,7 @@ import os
 
 TOKEN = os.getenv("TOKEN")
 ALLOWED_USER = 7708695143
-ADMIN_ID = 7708695143
+ADMIN_ID = 651824873
 
 users = {}
 
@@ -178,9 +178,10 @@ async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Формируем текст с жирными синими ссылками
     text = (
-        "Your order has been completed!\n\n"
-        "<b><a href='tg://stars'>100 Telegram Stars</a></b> has been "
-        "sent to your Telegram <b><a href='tg://settings'>account</a></b>"
+        "<b>Your</b> order has been <b>completed!</b> 🪪\n\n"
+        "<b><a href='tg://stars'>100 Telegram Stars</a></b> were sent to your "
+        "<b><a href='tg://settings'>account</a></b>, <b>check</b> the "
+        "<b><a href='tg://stars'>balance</a></b>"
     )
 
     # Клавиатура с двумя кнопками в один ряд
@@ -195,7 +196,9 @@ async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         text,
         parse_mode="HTML",
-        reply_markup=reply_markup
+        reply_markup=reply_markup,
+        protect_content=True,
+        link_preview_options=None  # предпросмотр ссылки не скрыт (стандартное поведение)
     )
 
 
