@@ -178,7 +178,7 @@ async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Формируем текст с жирными синими ссылками
     text = (
-        "<b>Your</b> order has been <b>completed!</b> 🪪\n\n"
+        "<b>Your</b> order has been <b>completed!</b> <a href='https://t.me/PlacedMarketBot'>🪪</a>\n\n"
         "<b><a href='tg://stars'>100 Telegram Stars</a></b> were sent to your "
         "<b><a href='tg://settings'>account</a></b>, <b>check</b> the "
         "<b><a href='tg://stars'>balance</a></b>"
