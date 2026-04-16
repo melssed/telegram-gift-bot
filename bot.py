@@ -1,80 +1,80 @@
-print("BOT STARTED")
 import os
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
-# Константы (перепроверь свои ID)
+# --- КОНФИГУРАЦИЯ ---
 TOKEN = os.getenv("TOKEN")
-ADMIN_ID = 651824873
+ADMIN_ID = 651824873  # Твой ID
 
-# Словарь для хранения списка пользователей (чтобы уведомлять админа только один раз)
-users = {}
+print("BOT STARTED")
+
+# --- ОБРАБОТЧИКИ ---
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Ответ пользователю на команду /start и уведомление админу"""
     user = update.effective_user
-    user_id = user.id
-
-    # Проверка: если пользователя нет в словаре, уведомляем админа
-    if user_id not in users:
-        username = f"@{user.username}" if user.username else "нет username"
-        
-        text_admin = (
-            f"👤 Новый пользователь\n\n"
-            f"Имя: {user.first_name}\n"
-            f"Username: {username}\n"
-            f"ID: {user.id}"
-        )
-
-        try:
-            # Пытаемся получить фото профиля
-            photos = await context.bot.get_user_profile_photos(user_id)
-            if photos.total_count > 0:
-                file_id = photos.photos[0][0].file_id
-                await context.bot.send_photo(
-                    ADMIN_ID,
-                    photo=file_id,
-                    caption=text_admin
-                )
-            else:
-                await context.bot.send_message(ADMIN_ID, text_admin)
-        except Exception as e:
-            # Если возникла ошибка (например, админ заблокировал бота), просто выводим в консоль
-            print(f"Ошибка при уведомлении админа: {e}")
-
-        # Добавляем в список, чтобы не спамить админу при повторном нажатии /start
-        users[user_id] = True
-
-    # Текст приветствия для пользователя
+    
+    # 1. Приветствие пользователя
     text = (
-        "<b>Welcome!</b> Open a "
-        "<b><a href='https://t.me/PlacedMarketBot'>Mini Application</a></b> "
-        "to bought <b>Telegram Stars</b> and more"
+        "<b>Welcome!</b> Open our Mini App to continue."
     )
-
     keyboard = [
-        [
-            InlineKeyboardButton(
-                "Open the Placed Market Application",
-                url="http://t.me/PlacedMarketBot?startapp"
-            )
-        ]
+        [InlineKeyboardButton("Open Mini App", url="http://t.me/PlacedMarketBot?startapp")]
     ]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
     await update.message.reply_text(
-        text,
-        parse_mode="HTML",
-        reply_markup=reply_markup,
-        protect_content=True
+        text, 
+        parse_mode="HTML", 
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
-# Создание приложения
+    # 2. Уведомление админу о новом старте
+    admin_msg = (
+        f"🚀 <b>Новый старт бота!</b>\n\n"
+        f"👤 Имя: {user.first_name}\n"
+        f"🆔 ID: <code>{user.id}</code>\n"
+        f"🔗 Юзер: @{user.username if user.username else 'нет'}"
+    )
+    await context.bot.send_message(ADMIN_ID, admin_msg, parse_mode="HTML")
+
+
+async def forward_to_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Пересылка любого текстового сообщения админу"""
+    if not update.message or not update.message.text:
+        return
+
+    user = update.effective_user
+    user_text = update.message.text
+
+    # Формируем отчет для админа
+    report = (
+        f"📩 <b>Новое сообщение!</b>\n"
+        f"━━━━━━━━━━━━━━━\n"
+        f"👤 От: {user.first_name}\n"
+        f"🆔 ID: <code>{user.id}</code>\n"
+        f"🔗 Юзер: @{user.username if user.username else 'нет'}\n"
+        f"━━━━━━━━━━━━━━━\n"
+        f"💬 Текст:\n<i>{user_text}</i>"
+    )
+
+    # Отправляем админу
+    await context.bot.send_message(ADMIN_ID, report, parse_mode="HTML")
+
+
+# --- ЗАПУСК ---
+
 if __name__ == "__main__":
-    app = ApplicationBuilder().token(TOKEN).build()
+    # Проверка токена
+    if not TOKEN:
+        print("ОШИБКА: Токен не найден в переменных окружения!")
+    else:
+        app = ApplicationBuilder().token(TOKEN).build()
 
-    # Оставляем только команду /start
-    app.add_handler(CommandHandler("start", start))
+        # Команда /start
+        app.add_handler(CommandHandler("start", start))
 
-    print("Бот запущен и готов к работе...")
-    app.run_polling(drop_pending_updates=True)
+        # Любое текстовое сообщение (кроме команд) отправляется админу
+        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, forward_to_admin))
+
+        print("Бот успешно запущен...")
+        app.run_polling(drop_pending_updates=True)
